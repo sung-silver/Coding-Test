@@ -11,7 +11,7 @@ class Solution {
                 stack.push(c);
             }
             else{
-                if(stack.isEmpty()||stack.peek()!='('){
+                if(stack.isEmpty()||c!=')'){
                     answer = false;
                     break;
                 }else{
