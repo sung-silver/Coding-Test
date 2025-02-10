@@ -1,70 +1,72 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
- 
 public class Main {
+    private static int K = 0;
+    private static int[] numbers;
+    private static char[] sign;
+    private static boolean[] visited;
+    private static String max = "";
+    private static String min = "9999999999";
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        K = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        numbers = new int[K+1];
+        sign = new char[K];
+        visited = new boolean[10];
 
-	static int n;
-	static boolean[] visited;
-	static String[] arr;
-	static List<String> list = new ArrayList<>();
-	
-	static void dfs(String num, int idx) {
-		// 주어진 부등호의 모든 조건을 완성하면 리턴
-		if(idx == n+1) {
-			// 부등호가 성립되는 모든 경우의 수가 등록됨
-			list.add(num);
-			return;
-		}
+        for(int i=0; i<K; i++) {
+            sign[i] = st.nextToken().charAt(0);
+        }
 
-		// 0~9 까지의 수
-		for(int j = 0 ; j < 10; j++) {
-			// 사용한 숫자인지 체크
-			if(visited[j]) {
-				continue;
-						
-			}
-			// Character.getNumericValue : char -> int 형으로 변환 (선택한 숫자)
-			// j , arr[idx-1] : 선택한 숫자에 비교할 숫자와, 비교할 부등호
-			if(idx == 0 || ckeck(Character.getNumericValue(num.charAt(idx - 1)), j , arr[idx-1])) {
-				visited[j] = true;
-				// true일시, num에 문자열 붙임
-				dfs(num+j, idx+1);
-				visited[j] = false;				
-			}
-		}
-		
-	}
-	
-	static boolean ckeck(int a, int b, String c) {
-		// 현재 사용하는 숫자와 j번째 숫자와 비교하여, 부등호가 성립되면 true
-		if (c.equals(">")) {
-			if(a < b) return false;
-		} else if (c.equals("<")){
-			if(a > b) return false;
-		}
-		return true;
-	}
+        for(int i=0 ; i<10 ; i++) {
+            numbers[0] = i;
+            visited[i] = true;
+            dfs(i, 0);
+            visited = new boolean[10];
+        }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		n = Integer.parseInt(br.readLine());
-		arr = br.readLine().split(" ");
 
-		visited = new boolean[10];
-		
-		// param1 : 리턴받을 문자열, param2: 인덱스(0부터시작)
-		dfs("",0);
 
-		//최대값
-		System.out.print(list.get(list.size() - 1) + "\n");
-		//최소값
-		System.out.print(list.get(0));
-		
-	}
+        bw.write(max+"\n");
+        bw.write(min);
+        bw.flush();
+        bw.close();
+    }
 
+    private static void dfs(int i, int signIdx) {
+        if(signIdx==K) {
+            StringBuilder sb = new StringBuilder();
+            for (int num : numbers) {
+                sb.append(num);
+            }
+            String numStr = sb.toString();
+            if (numStr.compareTo(max) > 0) {
+                max = numStr;
+            }
+            if (numStr.compareTo(min) < 0) {
+                min = numStr;
+            }
+            return;
+        }
+
+        for(int j=0 ; j<10 ; j++) {
+            if(!visited[j] && checkStatement(i, j, signIdx)) {
+                numbers[signIdx+1]= j;
+                visited[j] = true;
+                dfs(j, signIdx+1);
+                visited[j] = false;
+            }
+        }
+    }
+
+    private static boolean checkStatement(int a, int b, int signIdx) {
+        if(sign[signIdx] == '<') {
+            return a<b;
+        }
+        return a>b;
+    }
 }
