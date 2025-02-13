@@ -1,30 +1,30 @@
-import java.util.Scanner;
-import java.util.Arrays;
- 
+import java.io.*;
+import java.util.*;
+
 public class Main {
- 
-	public static void main(String[] args) {
-		
-		Scanner in = new Scanner(System.in);
-		
-		int N = in.nextInt();
-		
-		int[] arr = new int[N];
-		
-		for(int i = 0; i < N; i++) {
-			arr[i] = in.nextInt();
-		}
-		
-		Arrays.sort(arr);
- 
- 
-		int prev = 0;
-		int sum = 0;
-				
-		for(int i = 0; i < N; i++) {	
-			sum += prev + arr[i];
-			prev += arr[i];
-		}
-		System.out.println(sum);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int answer = 0;
+        int N = Integer.parseInt(st.nextToken());
+        int[] times = new int[N];
+        st = new StringTokenizer(br.readLine());
+
+        for (int i = 0; i < N; i++) {
+            times[i] = Integer.parseInt(st.nextToken());
+        }
+
+        Arrays.sort(times);
+
+        int prev = 0;
+        for (int i = 0; i < N; i++) {
+            answer += prev + times[i];
+            prev += times[i];
+        }
+
+        bw.write(String.valueOf(answer));
+        bw.flush();
+        bw.close();
+    }
 }
