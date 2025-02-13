@@ -1,35 +1,57 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int tc = scanner.nextInt();
-        while (tc > 0) {
-            int N = scanner.nextInt();
-            int selected = 0;
-            int minInterviewRank = Integer.MAX_VALUE;
+class Assignment {
+    public int paper;
+    public int interview;
 
-            List<int[]> candidates = new ArrayList<>();
+    public Assignment(int paper, int interview) {
+        this.paper = paper;
+        this.interview = interview;
+    }
+}
+
+
+public class Main {
+    private static int T;
+    private static int N;
+
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        T = Integer.parseInt(st.nextToken());
+
+        while(T>0) {
+            st = new StringTokenizer(br.readLine());
+            N = Integer.parseInt(st.nextToken());
+            Assignment[] assignments = new Assignment[N];
+            int answer = 0;
+
             for (int i = 0; i < N; i++) {
-                int paper = scanner.nextInt();
-                int interview = scanner.nextInt();
-                candidates.add(new int[]{paper, interview});
+                st = new StringTokenizer(br.readLine());
+                int paper = Integer.parseInt(st.nextToken());
+                int interview = Integer.parseInt(st.nextToken());
+                assignments[i] = new Assignment(paper, interview);
             }
 
-            // Sort candidates based on paper rank
-            candidates.sort(Comparator.comparingInt(o -> o[0]));
+            Arrays.sort(assignments, Comparator.comparingInt(o -> o.paper));
+            int minInterviewRank = assignments[0].interview;
+            answer++;
 
-            // Select candidates based on interview rank
-            for (int[] candidate : candidates) {
-                int interviewRank = candidate[1];
-                if (interviewRank < minInterviewRank) {
-                    selected++;
-                    minInterviewRank = interviewRank;
+            for(int i=1 ; i<N; i++) {
+                if(minInterviewRank > assignments[i].interview) {
+                    minInterviewRank = assignments[i].interview;
+                    answer++;
                 }
             }
 
-            System.out.println(selected);
-            tc--;
+            bw.write(answer+"\n");
+            T--;
         }
+
+        bw.flush();
+        bw.close();
     }
 }
