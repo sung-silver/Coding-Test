@@ -1,68 +1,78 @@
+import java.io.*;
 import java.util.*;
- 
+
+class Point {
+    public int x;
+    public int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+
 public class Main {
- 
-    static int n, m;
-    static int[][] board;
-    static int min = Integer.MAX_VALUE;
-    static ArrayList<Node> chickenList = new ArrayList<>(); 
-    static ArrayList<Node> houseList = new ArrayList<>();
-    static boolean[] chickenVisited;
-    
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
- 
-        n = scan.nextInt();
-        m = scan.nextInt();
-        
-        board = new int[n][n];
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                board[i][j] = scan.nextInt();
-                if(board[i][j] == 1) houseList.add(new Node(i, j));
-                else if(board[i][j] == 2) chickenList.add(new Node(i, j));
+    private static int N;
+    private static int M;
+    private static boolean[] open;
+    private static ArrayList<Point> chicken = new ArrayList<>();
+    private static ArrayList<Point> house = new ArrayList<>();
+    private static int minDistanceOfCity = 0;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j=0; j<N; j++) {
+                int number = Integer.parseInt(st.nextToken());
+                Point point  = new Point(i, j);
+                if(number == 1) {
+                    house.add(point);
+                }
+                else if(number == 2) {
+                    chicken.add(point);
+                }
             }
         }
-        
-        chickenVisited = new boolean[chickenList.size()];
-        backtracking(0, 0);
-        System.out.println(min);
+        open = new boolean[chicken.size()];
+        minDistanceOfCity = Integer.MAX_VALUE;
+        dfs(0, 0);
+
+        bw.write(String.valueOf(minDistanceOfCity));
+        bw.flush();
+        bw.close();
     }
-    
-    public static void backtracking(int count, int idx) {
-        if(count == m) {
-            int total = 0;
-            for(int i = 0; i < houseList.size(); i++) {
-                int sum = Integer.MAX_VALUE;
-                for(int j = 0; j < chickenList.size(); j++) {
-                    if(chickenVisited[j] == true) {
-                        int dist = Math.abs(houseList.get(i).x - chickenList.get(j).x) 
-                                + Math.abs(houseList.get(i).y - chickenList.get(j).y);
-                        sum = Math.min(sum, dist);
+
+    private static void dfs(int start, int count) {
+        if(count == M) {
+            int sumOfDistance = 0;
+
+            for (int i=0; i<house.size(); i++) {
+                int minDistanceOfHouse = Integer.MAX_VALUE;
+                for (int j=0; j< chicken.size(); j++) {
+                    if(open[j]) {
+                        int distance = Math.abs(house.get(i).x - chicken.get(j).x) + Math.abs(house.get(i).y - chicken.get(j).y);
+                        minDistanceOfHouse = Math.min(minDistanceOfHouse, distance);
                     }
                 }
-                total += sum;
+                sumOfDistance += minDistanceOfHouse;
             }
-            min = Math.min(total, min);
+            minDistanceOfCity = Math.min(minDistanceOfCity, sumOfDistance);
             return;
         }
-        
-        for(int i = idx; i < chickenList.size(); i++) {
-            if(chickenVisited[i] == false) {
-                chickenVisited[i] = true;
-                backtracking(count + 1, i + 1);
-                chickenVisited[i] = false;
+
+        for(int i=start; i< chicken.size();i++) {
+            if(!open[i]) {
+                open[i] = true;
+                dfs(i+1, count+1);
+                open[i] = false;
             }
-        }
-    }
-    
-    public static class Node {
-        int x;
-        int y;
-        
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
         }
     }
 }
