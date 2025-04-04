@@ -1,30 +1,32 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T;
-        String scores;
-        String[] score;
-        int max=0;
-        double total=0;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        double maxScore = 0;
+        double newSum = 0;
+        double newAvg = 0;
+        double[] scores = new double[N];
+        st = new StringTokenizer(br.readLine());
 
-        T = sc.nextInt();
-        sc.nextLine();
-        scores = sc.nextLine();
-        score = scores.split(" ");
-
-        for(int i=0; i<T; i++){
-            if(max<Integer.valueOf(score[i])){
-                max = Integer.valueOf(score[i]);
-            }
+        for(int i=0 ; i<N ; i++) {
+            scores[i] = Double.parseDouble(st.nextToken());
+            maxScore = Math.max(maxScore, scores[i]);
         }
 
-        for(int i=0;i<T;i++){
-            total += ((Double.valueOf(score[i])/max)*100);
+        for(int j=0; j<N; j++) {
+            double newScore = scores[j] /maxScore * 100;
+            newSum += newScore;
         }
 
-        System.out.println(total/T);
-        sc.close();
+        newAvg = newSum / N;
+
+        bw.write(String.valueOf(newAvg));
+        bw.flush();
+        bw.close();
     }
 }
