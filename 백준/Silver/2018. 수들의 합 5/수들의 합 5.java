@@ -1,31 +1,35 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        int N;
-        Scanner sc = new Scanner(System.in);
-        
-        int start=0, end=0;
-        int sum=0, count=0;
-        
-        N = sc.nextInt();
-        
-        while(start<=N){
-            while(++end<=N) {
-                sum += end;
-                if (sum >= N) {
-                    if (sum == N) count++;
-                    break;
-                }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int start = 1;
+        int end = 1;
+        int sum = 1;
+        int count = 0;
+
+        while(start<=end) {
+            if(sum==N) {
+                count++;
+                end++;
+                sum+=end;
             }
-            while(++start<=N){
-                sum -= start;
-                if(sum<=N){
-                    if(sum==N) count++;
-                    break;
-                }
+            else if (sum < N) {
+                end++;
+                sum += end;
+            }
+            else {
+                sum-=start;
+                start++;
             }
         }
-        System.out.println(count);
+
+        bw.write(String.valueOf(count));
+        bw.flush();
+        bw.close();
     }
 }
