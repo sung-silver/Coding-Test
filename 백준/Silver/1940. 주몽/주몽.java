@@ -1,45 +1,44 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        int N;
-        int M;
-        Scanner sc = new Scanner(System.in);
-        int[] array;
-        int start;
-        int end;
-        int count;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        int[] numbers = new int[N];
+        int count = 0;
+        int start = 0;
+        int end = N-1;
+        int sum;
 
-        N = sc.nextInt();
-        M = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < N ; i++) {
+            numbers[i] = Integer.parseInt(st.nextToken());
+        }
+        Arrays.sort(numbers);
 
-        array = new int[N];
-
-        for(int i=0;i<N;i++){
-            array[i] = sc.nextInt();
+        sum = numbers[start] + numbers[end];
+        while(start < end) {
+            if(sum == M) {
+                count++;
+                sum -= numbers[start++];
+                sum += numbers[start];
+            }
+            else if(sum < M) {
+                sum -= numbers[start++];
+                sum += numbers[start];
+            } else {
+                sum -= numbers[end--];
+                sum += numbers[end];
+            }
         }
 
-        Arrays.sort(array);
-
-        start = 0;
-        end = N-1;
-        count = 0;
-
-        while(start<end){
-            if((array[start]+array[end])<M){
-                start++;
-            }
-            else if((array[start]+array[end])>M){
-                end--;
-            }
-            else{
-                count ++;
-                start++;
-                end--;
-            }
-        }
-        System.out.println(count);
-        sc.close();
+        bw.write(String.valueOf(count));
+        bw.flush();
+        bw.close();
     }
 }
