@@ -1,70 +1,54 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int S = Integer.parseInt(st.nextToken());
+        int P = Integer.parseInt(st.nextToken());
+        String DNA = br.readLine();
+        st = new StringTokenizer(br.readLine());
+        int countA = Integer.parseInt(st.nextToken());
+        int countC = Integer.parseInt(st.nextToken());
+        int countG = Integer.parseInt(st.nextToken());
+        int countT = Integer.parseInt(st.nextToken());
+        int compareA = 0;
+        int compareC = 0;
+        int compareG = 0;
+        int compareT = 0;
+        int subDNAPasswordCount = 0;
 
-    static int[] compareDNA = new int[4]; // 0: A, 1: C, 2: G, 3: T
-    static int[] countDNA = new int[4];
+        int start = 0;
+        int end = P - 1;
 
-    static boolean compareCount(){
-        if((compareDNA[0]<=countDNA[0])&&(compareDNA[1]<=countDNA[1])&&(compareDNA[2]<=countDNA[2])&&(compareDNA[3]<=countDNA[3]))
-            return true;
-        return false;
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        char[] PW;
-        int S;
-        int P;
-        String DNA;
-        int start,end;
-        int count=0;
-
-        S = sc.nextInt();
-        P = sc.nextInt();
-        sc.nextLine();
-        DNA = sc.nextLine();
-        PW = DNA.toCharArray();
-
-        for(int i=0;i<4;i++){
-            compareDNA[i] = sc.nextInt();
-            countDNA[i]=0;
+        for (int i = start; i <= end; i++) {
+            if (DNA.charAt(i) == 'A') compareA++;
+            if (DNA.charAt(i) == 'C') compareC++;
+            if (DNA.charAt(i) == 'G') compareG++;
+            if (DNA.charAt(i) == 'T') compareT++;
         }
 
-        for(int i=0; i<P ; i++){
-            switch(PW[i]){
-                case 'A': countDNA[0]++; break;
-                case 'C': countDNA[1]++; break;
-                case 'G': countDNA[2]++; break;
-                case 'T': countDNA[3]++; break;
+        while (true) {
+            if (compareA >= countA && compareC >= countC && compareG >= countG && compareT >= countT) {
+                subDNAPasswordCount++;
             }
-        }
-        if(compareCount()) count++;
-
-        start = 1;
-        end = P;
-
-        while(end<S){
-            switch(PW[start-1]){
-                case 'A': countDNA[0]--; break;
-                case 'C': countDNA[1]--; break;
-                case 'G': countDNA[2]--; break;
-                case 'T': countDNA[3]--; break;
-            }
-            switch(PW[end]){
-                case 'A': countDNA[0]++; break;
-                case 'C': countDNA[1]++; break;
-                case 'G': countDNA[2]++; break;
-                case 'T': countDNA[3]++; break;
-            }
-
-            if(compareCount()) count++;
-
+            if (DNA.charAt(start) == 'A' && compareA > 0) compareA--;
+            if (DNA.charAt(start) == 'C' && compareC > 0) compareC--;
+            if (DNA.charAt(start) == 'G' && compareG > 0) compareG--;
+            if (DNA.charAt(start) == 'T' && compareT > 0) compareT--;
             start++;
             end++;
+            if(end > S-1) break;
+            if (DNA.charAt(end) == 'A') compareA++;
+            if (DNA.charAt(end) == 'C') compareC++;
+            if (DNA.charAt(end) == 'G') compareG++;
+            if (DNA.charAt(end) == 'T') compareT++;
         }
 
-        System.out.println(count);
-        sc.close();
+        bw.write(String.valueOf(subDNAPasswordCount));
+        bw.flush();
+        bw.close();
     }
 }
