@@ -1,32 +1,51 @@
 import java.util.*;
 
 class Solution {
-
+    class Stage implements Comparable<Stage> {
+        private int id;
+        private double error;
+        
+        public Stage(int id, double error) {
+            this.id = id;
+            this.error = error;
+        }
+        
+        @Override
+        public int compareTo(Stage o) {
+            if(error < o.error)
+                return -1;
+            if(error > o.error)
+                return 1;
+            return 0;
+        }
+    }
+    
     public int[] solution(int N, int[] stages) {
-        int[] failed  = new int[N + 2];
-        int[] reached = new int[N + 2];
-
-        for (int s : stages) {
-            if (s <= N) failed[s]++;
-            reached[s]++;
+        int[] answer = new int[N];
+        int[] errorCount = new int[N+2];
+        int[] totalCount = new int[N+2];
+        List<Stage> errorRates = new ArrayList<>();
+        
+        for(int i=0 ; i<stages.length ; i++) {
+            if(stages[i] < N+1) {
+                errorCount[stages[i]]++;
+            }
         }
-
-        for (int i = N; i >= 1; i--) {
-            reached[i] += reached[i + 1];
-        }
-
-        Integer[] order = new Integer[N];
+        
+        int remain = stages.length;
+        
         for (int i = 1; i <= N; i++) {
-            order[i - 1] = i;
+            double rate = remain == 0 ? 0.0
+                              : (double) errorCount[i] / remain;
+            errorRates.add(new Stage(i, rate));
+            remain -= errorCount[i];
         }
-
-        Arrays.sort(order, (a, b) -> {
-            double rateA = reached[a] == 0 ? 0 : (double) failed[a] / reached[a];
-            double rateB = reached[b] == 0 ? 0 : (double) failed[b] / reached[b];
-            if (rateA == rateB) return a - b;
-            return Double.compare(rateB, rateA);
-        });
-
-        return Arrays.stream(order).mapToInt(Integer::intValue).toArray();
+        
+        Collections.sort(errorRates, Collections.reverseOrder());
+        
+        for(int i=0; i<N; i++) {
+            answer[i] = errorRates.get(i).id;
+        }
+        return answer;
     }
 }
