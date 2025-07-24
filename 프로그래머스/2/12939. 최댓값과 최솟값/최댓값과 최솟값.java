@@ -2,23 +2,20 @@ import java.util.*;
 
 class Solution {
     public String solution(String s) {
-        String answer = "";
-        StringTokenizer st = new StringTokenizer(s);
-        int maxValue = Integer.MIN_VALUE;
-        int minValue = Integer.MAX_VALUE;
+        String[] arr = s.split(" ");
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         
-        while(st.hasMoreTokens()) {
-            int current = Integer.parseInt(st.nextToken());
-            if(current > maxValue) {
-                maxValue = current;
+        for(String com : arr) {
+            int current = Integer.valueOf(com);
+            if(current > max) {
+                max = current;
             }
-            if(current < minValue) {
-                minValue = current;
+            if(current < min) {
+                min = current;
             }
         }
-        
-        answer = minValue + " " + maxValue;
-        
+        String answer = min + " " + max;
         return answer;
     }
 }
