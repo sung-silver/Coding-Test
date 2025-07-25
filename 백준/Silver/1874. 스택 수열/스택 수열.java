@@ -1,35 +1,52 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        StringBuilder result = new StringBuilder();
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int N = Integer.parseInt(br.readLine());
         Stack<Integer> stack = new Stack<>();
+        int[] permutation = new int[N];
+        List<Character> op = new ArrayList<>();
 
-        int N = in.nextInt();
-        int start = 0;
-        
-        while(N -- > 0) {
-            int value = in.nextInt();
-
-            if(start<value) {
-                for (int i = start + 1; i <= value; i++) {
-                    stack.push(i);
-                    result.append('+').append('\n');
-                }
-                start = value; 
-            }
-            else if(stack.peek() != value) { 
-                System.out.println("NO");
-                return;		
-            }
-
-            stack.pop();
-            result.append('-').append('\n');
+        for(int i=0 ; i<N ; i++) {
+            permutation[i] = Integer.parseInt(br.readLine());
         }
 
-        System.out.println(result);
+        int current = 0;
+        int start = 1;
+        stack.push(start);
+        op.add('+');
+        while(current < N && start <= N) {
+            if(!stack.isEmpty() && stack.peek() == permutation[current]) {
+                stack.pop();
+                current++;
+                op.add('-');
+            } else {
+                start++;
+                stack.push(start);
+                op.add('+');
+            }
+        }
+
+        if(!stack.isEmpty()) {
+            bw.write("NO");
+        } else {
+            for (Character character : op) {
+                bw.write(character + "\n");
+            }
+        }
+
+
+        bw.flush();
+        bw.close();
+
     }
 }
