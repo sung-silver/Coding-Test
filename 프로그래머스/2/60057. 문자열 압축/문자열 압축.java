@@ -4,7 +4,7 @@ class Solution {
     public int solution(String s) {
         int answer = s.length();
         
-        for (int step = 1; step <= s.length(); step++) {
+        for (int step = 1; step <= s.length() / 2; step++) {
             StringBuilder sb = new StringBuilder();
             String compare = s.substring(0, step);
             int count = 1;
