@@ -1,16 +1,9 @@
 -- 코드를 입력하세요
--- NULL이거나 2022년 4월 13일 이후이거나
-
-SELECT a.APNT_NO AS APNT_NO, 
-p.PT_NAME AS PT_NAME,
-p.PT_NO AS PT_NO, 
-a.MCDP_CD AS MCDP_CD, 
-d.DR_NAME AS DR_NAME,
-a.APNT_YMD as APNT_YMD
+SELECT a.apnt_no, p.pt_name, p.pt_no, a.mcdp_cd, d.dr_name, a.apnt_ymd
 FROM APPOINTMENT a 
-JOIN PATIENT p ON a.PT_NO = p.PT_NO 
-JOIN DOCTOR d ON a.MDDR_ID = d.DR_ID
-WHERE a.MCDP_CD = 'CS' 
-    AND TO_CHAR(a.APNT_YMD, 'YYYY-MM-DD') = '2022-04-13'
-    AND a.APNT_CNCL_YN = 'N'
-ORDER BY APNT_YMD ASC;
+JOIN DOCTOR d on a.mddr_id = d.dr_id
+JOIN PATIENT p on a.pt_no = p.pt_no
+WHERE a.apnt_cncl_yn = 'N'
+    AND a.mcdp_cd = 'CS'
+    AND TO_CHAR(a.apnt_ymd, 'YYYY-MM-DD') = '2022-04-13'
+ORDER BY a.apnt_ymd;
